@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-canvas: #FAFAFA;
+  --bg-surface: #FFFFFF;
+  --bg-sidebar: #F5F5F3;
+  --bg-hover: #EFEFED;
+  --bg-active: #FEF0ED;
+  --border: #E4E4E2;
+  --border-subtle: #EDEDEB;
+  --text-primary: #111110;
+  --text-secondary: #57574F;
+  --text-muted: #A8A8A0;
+  --text-inverse: #FFFFFF;
+  --accent: #E4573D;
+  --accent-hover: #CF4530;
+  --status-green: #16A34A;
+  --status-green-bg: #F0FDF4;
+  --status-amber: #B45309;
+  --status-amber-bg: #FFFBEB;
+  --status-red: #DC2626;
+  --status-red-bg: #FEF2F2;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Aliases */
+  --bg-base: var(--bg-canvas);
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--bg-surface);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--border-subtle);
+  --muted-foreground: var(--text-muted);
+  --destructive: var(--status-red);
+  --destructive-foreground: #FFFFFF;
+  --input: var(--border);
+  --ring: var(--accent);
+}
+
+html.dark {
+  --bg-canvas: #111113;
+  --bg-surface: #18181B;
+  --bg-sidebar: #161618;
+  --bg-hover: #1F1F22;
+  --bg-active: #2A1F1D;
+  --border: #2C2C2F;
+  --border-subtle: #222225;
+  --text-primary: #F2F2F0;
+  --text-secondary: #8C8C88;
+  --text-muted: #545450;
+  --text-inverse: #111110;
+  --accent: #E4573D;
+  --accent-hover: #F06145;
+  --status-green: #22C55E;
+  --status-green-bg: #052E16;
+  --status-amber: #F59E0B;
+  --status-amber-bg: #1C1107;
+  --status-red: #EF4444;
+  --status-red-bg: #1C0606;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+
+  --bg-base: var(--bg-canvas);
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--bg-surface);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--border-subtle);
+  --muted-foreground: var(--text-muted);
+  --destructive: var(--status-red);
+  --destructive-foreground: #FFFFFF;
+  --input: var(--border);
+  --ring: var(--accent);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  /* Typography Tightening */
+  h1, .page-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    line-height: 1.25;
+  }
+
+  .page-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  code, pre, kbd, samp, .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  input, select, textarea {
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    transition: border-color 150ms ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: rgba(228, 87, 61, 0.15);
+    color: var(--text-primary);
+  }
+
+  /* Minimal clean scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+}
+
+@layer utilities {
+  /* Subtle Background Texture on Canvas */
+  .canvas-texture {
+    background-image: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.07) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+
+  html.dark .canvas-texture {
+    background-image: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+
+  .stat-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-surface {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Primary Button */
+  .btn-primary {
+    background-color: var(--accent);
+    color: #FFFFFF;
+    border-radius: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+  }
+  .btn-primary:disabled {
+    background-color: var(--border);
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+
+  /* Outlined Button */
+  .btn-outlined {
+    background-color: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-outlined:hover {
+    background-color: var(--bg-hover);
+  }
+  .btn-outlined:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Status Pills */
+  .status-pill {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    line-height: normal;
+  }
+  .status-pill-green {
+    background-color: var(--status-green-bg);
+    color: var(--status-green);
+  }
+  .status-pill-amber {
+    background-color: var(--status-amber-bg);
+    color: var(--status-amber);
+  }
+  .status-pill-red {
+    background-color: var(--status-red-bg);
+    color: var(--status-red);
+  }
+
+  /* Skeletons: Flat muted color, NO shimmer */
+  .skeleton-flat {
+    background-color: var(--bg-hover);
+    border-radius: 4px;
+  }
+}
+

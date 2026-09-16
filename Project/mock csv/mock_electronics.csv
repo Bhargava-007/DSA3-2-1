@@ -1,0 +1,31 @@
+id,title,brand,price,description,category,source
+ELEC-101,Apple iPhone 15 Pro (128 GB) - Natural Titanium,Apple,999.00,"A17 Pro chip 48MP main camera 6.1-inch Super Retina XDR display titanium design with USB-C connector",Smartphones,amazon
+ELEC-102,Apple iPhone 15 Pro 128GB Natural Titanium 5G,Apple,989.99,"Apple smartphone featuring A17 Pro bionic processor 48 megapixel camera system and titanium frame with USB-C",Smartphones,flipkart
+ELEC-103,Apple iPhone 15 Pro - 128GB - Natural Titanium (Unlocked),Apple,975.50,"Brand new factory unlocked iPhone 15 Pro 128GB Natural Titanium with OLED display and USB-C port",Smartphones,ebay
+ELEC-104,Samsung Galaxy S24 Ultra 5G (Titanium Black 256GB),Samsung,1299.99,"Snapdragon 8 Gen 3 200MP camera 6.8-inch Dynamic AMOLED 2X display with embedded S Pen stylus",Smartphones,amazon
+ELEC-105,Samsung Galaxy S24 Ultra 256 GB Titanium Black,Samsung,1280.00,"Flagship Galaxy smartphone with AI features 200MP quad camera 5000mAh battery and built-in S Pen",Smartphones,flipkart
+ELEC-106,Samsung S24 Ultra 5G 256GB Titanium Black Unlocked,Samsung,1249.00,"New Samsung Galaxy S24 Ultra smartphone 256GB storage Titanium Black color with S-Pen",Smartphones,ebay
+ELEC-107,Sony WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones - Black,Sony,398.00,"Auto NC optimizer 30-hour battery life crystal clear hands-free calling with 8 microphones multipoint connection",Headphones,amazon
+ELEC-108,Sony WH-1000XM5 Bluetooth Over-Ear Headphones (Black),Sony,389.99,"Premium active noise cancelling over ear wireless headphones with 30 hour playback and fast charging",Headphones,flipkart
+ELEC-109,Sony WH1000XM5/B Wireless Noise Cancelling Over-Ear Headphones Black,Sony,379.00,"Official Sony WH-1000XM5 noise cancelling Bluetooth headphones in black finish",Smartphones,ebay
+ELEC-110,Apple MacBook Air 13.6" Laptop - M2 chip - 8GB Memory - 256GB SSD - Midnight,Apple,1099.00,"Strikingly thin design 13.6-inch Liquid Retina display 1080p FaceTime HD camera MagSafe charging port",Laptops,amazon
+ELEC-111,Apple MacBook Air M2 (8GB RAM 256GB SSD 13.6 inch Midnight),Apple,1089.00,"Lightweight Mac laptop with Apple Silicon M2 processor 8-core CPU 8-core GPU and backlit Magic Keyboard",Laptops,flipkart
+ELEC-112,MacBook Air 13.6 inch M2 Chip 8GB / 256GB SSD Midnight Blue,Apple,1049.99,"Apple MacBook Air 13-inch M2 8GB unified memory 256GB SSD storage Midnight edition",Laptops,ebay
+ELEC-113,Dell XPS 13 9315 Laptop 13.4" FHD+ Intel Core i7-1250U 16GB RAM 512GB SSD,Dell,1149.00,"Ultra-portable 13.4 inch notebook with 12th Gen Intel Core i7 16GB LPDDR5 memory and Intel Iris Xe graphics",Laptops,amazon
+ELEC-114,Dell XPS 13 (Intel Core i7 12th Gen 16GB 512GB SSD Windows 11),Dell,1135.00,"Premium ultrabook featuring Intel Core i7-1250U 16GB RAM 512GB NVMe SSD and InfinityEdge display",Laptops,flipkart
+ELEC-115,Bose QuietComfort 45 Bluetooth Wireless Noise Cancelling Headphones - Triple Black,Bose,329.00,"High-fidelity audio with Quiet and Aware modes lightweight comfort and up to 24 hours of battery life",Headphones,amazon
+ELEC-116,Bose QC45 Wireless Over-Ear Noise Cancelling Headphones Triple Black,Bose,319.99,"Acoustic Noise Cancelling technology balanced sound at any volume 24hr battery with USB-C quick charge",Headphones,flipkart
+ELEC-117,Bose QuietComfort 45 Over-Ear Headphones - Black,Bose,299.00,"Original Bose QuietComfort 45 wireless Bluetooth noise cancelling headphones in black",Headphones,ebay
+ELEC-118,Apple AirPods Pro (2nd Generation) Wireless Earbuds with MagSafe USB-C Case,Apple,249.00,"H2 chip Active Noise Cancellation Transparency mode personalized spatial audio and touch control",Headphones,amazon
+ELEC-119,Apple AirPods Pro 2nd Gen USB-C Wireless Earphones,Apple,239.99,"True wireless in-ear headphones with 2x more active noise cancellation and USB-C MagSafe charging case",Headphones,flipkart
+ELEC-120,Apple AirPods Pro Gen 2 with MagSafe Case Type-C,Apple,229.00,"Genuine Apple AirPods Pro 2 Bluetooth earphones with USB Type-C charging case",Headphones,ebay
+ELEC-121,Logitech MX Master 3S Wireless Performance Mouse - Graphite,Logitech,99.99,"8K DPI any-surface tracking Quiet Clicks electromagnetic MagSpeed scrolling for Windows and macOS",Accessories,amazon
+ELEC-122,Logitech MX Master 3S Bluetooth Ergonomic Mouse (Graphite),Logitech,94.50,"Quiet Click ergonomic mouse with 8000 DPI sensor USB-C rechargeable battery and customizable buttons",Accessories,flipkart
+ELEC-123,Kindle Paperwhite (16 GB) – 6.8" display with adjustable warm light,Amazon,149.99,"Now with a 6.8-inch display and thinner borders adjustable warm light up to 10 weeks of battery life and waterproof",E-Readers,amazon
+ELEC-124,Amazon Kindle Paperwhite 16GB 6.8 inch E-reader (Black),Amazon,144.00,"Waterproof glare-free 300 ppi display e-reader with 16GB storage and adjustable warm screen lighting",E-Readers,flipkart
+ELEC-125,ASUS ROG Zephyrus G14 (2024) 14" OLED Gaming Laptop AMD Ryzen 9 16GB 1TB RTX 4060,ASUS,1599.99,"Compact gaming laptop with 14-inch 3K 120Hz OLED screen AMD Ryzen 9 8945HS and NVIDIA GeForce RTX 4060",Laptops,amazon
+ELEC-126,Asus ROG Zephyrus G14 Gaming Laptop (Ryzen 9 / RTX 4060 / 16GB / 1TB SSD),ASUS,1575.00,"High performance portable gaming notebook featuring Ryzen 9 processor RTX 4060 GPU and OLED display",Laptops,flipkart
+ELEC-127,GoPro HERO12 Black - Waterproof Action Camera with 5.3K HDR Video,GoPro,399.99,"HyperSmooth 6.0 video stabilization HDR photo and video rugged waterproof design down to 33 feet",Cameras,amazon
+ELEC-128,GoPro Hero 12 Black 5.3K Ultra HD Action Camera,GoPro,389.00,"Waterproof sports action camera with HyperSmooth stabilization 5.3K60 video recording and Enduro battery",Cameras,flipkart
+ELEC-129,Anker 737 Power Bank (PowerCore 24K) 24000mAh 140W Portable Charger,Anker,149.99,"Ultra-powerful 140W two-way fast charging power bank with smart digital display for laptops and phones",Accessories,amazon
+ELEC-130,Anker 737 24000mAh 140W Fast Charging Power Bank,Anker,139.99,"High capacity 24K external battery pack with 140W USB-C output and real-time digital status screen",Accessories,flipkart
