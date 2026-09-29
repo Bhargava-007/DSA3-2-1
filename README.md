@@ -2,6 +2,16 @@
 
 > An end-to-end, deterministic entity resolution and catalog deduplication engine built with **Spring Boot 3 (Java 17/21)**, **React 19 + TypeScript + Vite**, and **PostgreSQL (Supabase)**.
 
+<p align="left">
+  <img src="https://img.shields.io/badge/Java-17%20%2F%2021-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 17/21" />
+  <img src="https://img.shields.io/badge/Spring_Boot-3.3.4-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" alt="Spring Boot 3" />
+  <img src="https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Supabase-336791?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+</p>
+
 ---
 
 ## Table of Contents
@@ -83,6 +93,8 @@ cd backend
 chmod +x ./tools/maven/apache-maven-3.9.6/bin/mvn
 ./tools/maven/apache-maven-3.9.6/bin/mvn spring-boot:run
 ```
+
+*(Note: Spring Boot automatically loads your local database settings from `backend/local.properties`, which is in `.gitignore` and never committed).*
 
 #### Confirmation:
 When the backend starts successfully, the terminal will log:
@@ -223,65 +235,101 @@ Project/
 ## 5. Architecture
 
 ```mermaid
-flowchart TD
-    subgraph ClientTier[" 🖥️ Client Tier (Browser) "]
-        direction TB
-        ReactApp["<b>React 19 + TypeScript SPA</b><br/>• Tailwind CSS + Lucide React<br/>• Interactive Algorithm Simulators<br/>• Real-Time Progress Monitoring"]
-        SWR["<b>SWR Cache Context</b><br/>• 60-second TTL in-memory cache<br/>• Stale-While-Revalidate background fetch"]
-        ReactApp <--> SWR
+flowchart TB
+    subgraph CLIENT ["🖥️ Client Tier (Browser)"]
+        direction LR
+        SPA["<b>React 19 + TypeScript SPA</b><br/>Tailwind CSS • Lucide Icons<br/>Interactive Simulators & Analytics"]
+        SWR["<b>SWR Cache Context</b><br/>60s In-Memory TTL<br/>Background Revalidation"]
+        SPA <-->|"State / Cache"| SWR
     end
 
-    subgraph GatewayTier[" ⚡ Development & Reverse Proxy Tier "]
-        Vite["<b>Vite 8 Reverse Proxy (:5173)</b><br/>• Seamless <code>/api</code> forwarding to backend (:8080)<br/>• Hot Module Replacement (HMR)"]
+    subgraph PROXY ["⚡ Development Proxy Tier"]
+        VITE["<b>Vite 8 Reverse Proxy (:5173)</b><br/>Seamless <code>/api</code> Forwarding • Hot Module Replacement"]
     end
 
-    subgraph BackendTier[" ☕ Spring Boot 3 Application Server (:8080) "]
+    subgraph BACKEND ["☕ Spring Boot 3 Backend Server (:8080)"]
         direction TB
-        subgraph Controllers["REST Controller Layer"]
-            C_API["<b>Spring REST Controllers (/api/v1)</b><br/>• Dataset, Pipeline & Entity Controllers<br/>• Match, Stats, Export & Similarity APIs<br/>• GlobalExceptionHandler & CorsConfig"]
-        end
-
-        subgraph Middleware["Execution & Middleware Layer"]
-            CacheMgr["<b>Spring CacheManager</b><br/>ConcurrentMapCacheManager<br/>(@Cacheable / @CacheEvict)"]
-            ThreadPool["<b>ThreadPoolTaskExecutor</b><br/>Async Pipeline Pool<br/>(4–8 Worker Threads)"]
-        end
-
-        subgraph DSAPipeline["⚡ High-Performance DSA Engine"]
+        CTRL["<b>REST Controller Layer (/api/v1)</b><br/>Datasets • Pipeline • Entities • Matches • Stats • Admin"]
+        
+        subgraph CORE ["Core Execution & Middleware"]
             direction LR
-            Trie["<b>Stage 1: Trie Index</b><br/>Stopword Filter O(L)"]
-            SA["<b>Stage 2: Suffix Array + LCP</b><br/>Inverted Index Blocking O(N log N)"]
-            SimEngine["<b>Stage 3: Multi-Signal Sim</b><br/>KMP + Rabin-Karp + Lev + Jaccard"]
-            Clustering["<b>Stage 4: DSU Graph + Heap</b><br/>Path Compression O(α(N))"]
-
-            Trie --> SA --> SimEngine --> Clustering
+            EXEC["<b>ThreadPoolTaskExecutor</b><br/>4-8 Background Workers"]
+            CACHE["<b>Spring CacheManager</b><br/>ConcurrentMap In-Memory Cache"]
         end
 
-        Controllers --> Middleware
-        Middleware --> DSAPipeline
+        subgraph PIPELINE ["⚡ High-Performance DSA Engine"]
+            direction LR
+            P1["<b>1. Prefix Trie</b><br/>O(L) Stopwords"]
+            P2["<b>2. Suffix Array</b><br/>O(N log N) Kasai LCP"]
+            P3["<b>3. Similarity</b><br/>KMP + RK + Lev + Jac"]
+            P4["<b>4. DSU Graph</b><br/>O(α(N)) Clustering"]
+            P1 --> P2 --> P3 --> P4
+        end
+
+        CTRL --> CORE
+        CORE --> P1
     end
 
-    subgraph StorageTier[" 🐘 Persistence Tier (PostgreSQL / Supabase Cloud) "]
-        Hikari["<b>HikariCP Connection Pool</b><br/>• Maximum Pool Size: 10<br/>• Batch Inserts (batch_size=100)<br/>• reWriteBatchedInserts=true"]
-        Database[("<b>PostgreSQL 15+ Schema</b><br/>• datasets • products • pipeline_runs<br/>• candidate_pairs • entity_clusters<br/>• cluster_members")]
-        Hikari --> Database
+    subgraph STORAGE ["🐘 Persistence Tier (Supabase PostgreSQL)"]
+        direction TB
+        HIKARI["<b>HikariCP Pool</b><br/>Batch Size = 100 • Rewrites Enabled"]
+        PG[("<b>PostgreSQL 15+ Schema</b><br/>datasets • products • pipeline_runs<br/>candidate_pairs • entity_clusters")]
+        HIKARI --> PG
     end
 
-    ClientTier -- "HTTP Requests (Port 5173)" --> GatewayTier
-    GatewayTier -- "Reverse Proxy / JSON (Port 8080)" --> Controllers
-    DSAPipeline -- "Spring Data JPA / Hibernate 6" --> Hikari
+    SPA -->|"HTTP :5173"| VITE
+    VITE -->|"/api → :8080"| CTRL
+    P4 -->|"Spring Data JPA Batch"| HIKARI
 
-    classDef clientBox fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
-    classDef gateBox fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
-    classDef backBox fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
-    classDef dsaBox fill:#312e81,stroke:#c084fc,stroke-width:2px,color:#f8fafc;
-    classDef dbBox fill:#1c1917,stroke:#fbbf24,stroke-width:2px,color:#f8fafc;
+    %% Premium Theme Styling
+    classDef clientStyle fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef proxyStyle fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef serverStyle fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
+    classDef dsaStyle fill:#312e81,stroke:#c084fc,stroke-width:1.5px,color:#f8fafc;
+    classDef dbStyle fill:#1c1917,stroke:#f59e0b,stroke-width:2px,color:#f8fafc;
 
-    class ClientTier,ReactApp,SWR clientBox;
-    class GatewayTier,Vite gateBox;
-    class BackendTier,Controllers,C_API,Middleware,CacheMgr,ThreadPool backBox;
-    class DSAPipeline,Trie,SA,SimEngine,Clustering dsaBox;
-    class StorageTier,Hikari,Database dbBox;
+    class SPA,SWR clientStyle;
+    class VITE proxyStyle;
+    class CTRL,EXEC,CACHE serverStyle;
+    class P1,P2,P3,P4 dsaStyle;
+    class HIKARI,PG dbStyle;
 ```
+
+<details>
+<summary><b>View Architecture Diagram as Plain Text (ASCII)</b></summary>
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                      🖥️ Client Tier                         │
+│                                                             │
+│       React 19 + TypeScript SPA  <───>  SWR In-Memory Cache │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ HTTP :5173
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   ⚡ Vite Reverse Proxy                      │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ /api → :8080
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 ☕ Spring Boot 3 Backend                     │
+│                                                             │
+│   REST Controllers  ──>  ThreadPool Executor / CacheManager │
+│                                  │                          │
+│                                  ▼                          │
+│                     ⚡ DSA Resolution Pipeline              │
+│   Trie Filter ──> Suffix Array/LCP ──> Similarity ──> DSU   │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ JPA / Hibernate Batch
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 🐘 PostgreSQL (Supabase)                    │
+│                                                             │
+│      datasets | products | candidate_pairs | clusters       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+</details>
 
 ### Architectural Component Breakdown
 
@@ -370,57 +418,59 @@ All REST endpoints are prefixed with `/api/v1` (admin endpoints also accept `/ap
 ## 7. The Algorithm Pipeline - Step by Step
 
 ```mermaid
-flowchart TD
-    RAW(["<b>📦 Raw CSV Product Catalogs</b><br/><i>(N un-normalized listings from Amazon, Flipkart, eBay)</i>"])
+flowchart TB
+    %% Nodes
+    RAW(["📦 <b>Raw Multi-Vendor CSV Catalogs</b><br/>Un-normalized listings from Amazon, Flipkart, eBay"])
 
-    subgraph S1[" 🌿 STAGE 1: Tokenization & Trie Indexing "]
-        direction TB
-        S1_INFO["<b>Data Structure:</b> <code>Prefix Trie</code> | <b>Time:</b> <code>O(L)</code> per token<br/>• Filters 22 e-commerce stop-words (e.g. <i>for, with, and, original, pack</i>)<br/>• Sanitizes noise, normalizes casing, and tokenizes title strings<br/>• <b>Output:</b> <code>Map&lt;productId, List&lt;Token&gt;&gt;</code>"]
-    end
+    S1["🌿 <b>Stage 1: Trie Tokenizer</b><br/><code>Prefix Trie</code> • O(L) Stop-word Pruning • Noise Sanitization"]
 
-    subgraph S2[" 🔍 STAGE 2: Candidate Blocking (Suffix Array + Inverted Index) "]
-        direction TB
-        S2_INFO["<b>Data Structures:</b> <code>Suffix Array</code>, <code>Kasai LCP</code>, <code>Inverted Index</code><br/><b>Time:</b> <code>O(N log N)</code> sorting, <code>O(N)</code> LCP array construction<br/>• <b>Inverted Index:</b> Groups items into token buckets; caps high-frequency lists at 500<br/>• <b>Suffix Array & LCP:</b> Concatenates titles with delimiters; scans adjacent suffixes for LCP $\ge 8$<br/>• <b>Output:</b> <b>80%–90% reduction</b> in pairwise comparison space"]
-    end
+    S2["🔍 <b>Stage 2: Candidate Blocking</b><br/><code>Suffix Array + Kasai LCP</code> • Inverted Index • <b>>80% Reduction</b>"]
 
-    subgraph S3[" 🎯 STAGE 3: Multi-Signal Similarity Scoring "]
+    subgraph S3 ["🎯 Stage 3: Multi-Signal Similarity Engine"]
         direction TB
-        subgraph Signals["Similarity Signal Decomposition"]
-            KMP["<b>KMP Search (30%)</b><br/><code>O(M + N)</code> LPS table"]
-            RK["<b>Rabin-Karp (15%)</b><br/><code>O(M + N)</code> 3-gram hash"]
-            LEV["<b>Levenshtein (25%)</b><br/><code>O(M · N)</code> 2-row DP"]
-            JAC["<b>Jaccard (30%)</b><br/><code>O(|A| + |B|)</code> token sets"]
+        subgraph Signals ["Parallel Algorithmic Signals"]
+            direction LR
+            KMP["<b>KMP (30%)</b><br/>Exact Substrings<br/>O(M+N) LPS"]
+            RK["<b>Rabin-Karp (15%)</b><br/>3-Gram Rolling Hash<br/>O(M+N)"]
+            LEV["<b>Levenshtein (25%)</b><br/>2-Row DP Edit Dist<br/>O(M·N)"]
+            JAC["<b>Jaccard (30%)</b><br/>Token Set Overlap<br/>O(|A|+|B|)"]
         end
-        S3_FORMULA["<b>Weighted Score Equation:</b><br/><code>Score = (0.30 · KMP) + (0.15 · RK) + (0.25 · Lev) + (0.30 · Jaccard) + Brand Boost (+0.05)</code><br/><i>⚡ Pairs with Composite Score &lt; 0.45 are pruned</i>"]
-        Signals --> S3_FORMULA
+        FILTER{"<b>Composite Score</b><br/>Weighted Score ≥ 0.45?"}
+        KMP --> FILTER
+        RK --> FILTER
+        LEV --> FILTER
+        JAC --> FILTER
     end
 
-    subgraph S4[" 🌐 STAGE 4: Graph Clustering & Max-Heap Ranking "]
-        direction TB
-        S4_INFO["<b>Data Structures:</b> <code>Disjoint Set Union (DSU)</code>, <code>Max-Heap (PriorityQueue)</code><br/><b>Time:</b> <code>O(α(N))</code> per merge/find operation (nearly linear)<br/>• <b>DSU Engine:</b> Merges candidate pairs with <b>Path Compression</b> & <b>Union by Rank</b><br/>• <b>Max-Heap Ranking:</b> Orders clusters by confidence score and listing volume<br/>• <b>Canonical Resolution:</b> Highest-degree title & majority-vote brand selection"]
-    end
+    S4["🌐 <b>Stage 4: DSU Graph Clustering</b><br/><code>Disjoint Set Union</code> • Path Compression • O(α(N)) • Max-Heap Ranking"]
 
-    subgraph S5[" 💾 STAGE 5: Cloud Persistence & Cache Eviction "]
-        direction TB
-        S5_INFO["<b>Persistence:</b> <code>Spring Data JPA + PostgreSQL Batching</code><br/>• Batch-inserts <code>EntityCluster</code> and <code>ClusterMember</code> records to Supabase<br/>• Transitions <code>PipelineRun</code> status to <code>COMPLETE</code> with execution timers<br/>• Triggers <code>@CacheEvict</code> to refresh frontend analytics and entity tables"]
-    end
+    S5["💾 <b>Stage 5: Batch Persistence</b><br/><code>Spring Data JPA + PostgreSQL</code> • JDBC Batching • Cache Invalidation"]
 
-    FINAL(["<b>✨ Resolved Canonical Entity Catalog</b><br/><i>(Deduplicated clusters with cross-vendor price comparison & high confidence)</i>"])
+    OUTPUT(["✨ <b>Canonical Deduplicated Entity Catalog</b><br/>Resolved Clusters • Unified Specifications • Price Comparison"])
 
+    %% Edges
     RAW --> S1
     S1 --> S2
-    S2 --> S3
-    S3_FORMULA --> S4
+    S2 --> KMP & RK & LEV & JAC
+    FILTER -- "✅ Yes (Match Edge)" --> S4
+    FILTER -. "❌ No (Pruned)" .-> DISCARD["🗑️ Prune Pair"]
     S4 --> S5
-    S5 --> FINAL
+    S5 --> OUTPUT
 
-    classDef stageBox fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
-    classDef sigBox fill:#1e1b4b,stroke:#818cf8,stroke-width:1px,color:#f8fafc;
-    classDef termBox fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#f8fafc;
+    %% Custom Styles & Color Palette
+    classDef inputOutput fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#f0f9ff;
+    classDef stageCard fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef signalCard fill:#2e1065,stroke:#c084fc,stroke-width:1.5px,color:#faf5ff;
+    classDef decision fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fffbeb;
+    classDef discard fill:#4c0519,stroke:#f43f5e,stroke-width:1px,color:#ffe4e6;
+    classDef finalSuccess fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#ecfdf5;
 
-    class S1,S2,S4,S5,S1_INFO,S2_INFO,S4_INFO,S5_INFO,S3_FORMULA stageBox;
-    class KMP,RK,LEV,JAC sigBox;
-    class RAW,FINAL termBox;
+    class RAW inputOutput;
+    class S1,S2,S4,S5 stageCard;
+    class KMP,RK,LEV,JAC signalCard;
+    class FILTER decision;
+    class DISCARD discard;
+    class OUTPUT finalSuccess;
 ```
 
 ### Algorithmic Complexity & Pipeline Stages Deep Dive
@@ -661,9 +711,9 @@ spring.application.name=resolve-backend
 server.port=8080
 
 # Supabase PostgreSQL (IPv4 Session Pooler with Batch Rewriting)
-spring.datasource.url=jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require&reWriteBatchedInserts=true
-spring.datasource.username=postgres.nsvaqxjodwqdtmeocvtr
-spring.datasource.password=z9RL-pTM34SNwGk
+spring.datasource.url=${SPRING_DATASOURCE_URL:jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require&reWriteBatchedInserts=true}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME:postgres.nsvaqxjodwqdtmeocvtr}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD:YOUR_DATABASE_PASSWORD}
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # HikariCP Connection Pool Optimization

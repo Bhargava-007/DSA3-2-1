@@ -1,0 +1,20 @@
+# Backend Build Artifacts
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+local.properties
+*.properties.local
+*.pem
+*.key
+*.credentials
+
+# Logs
+*.log
+logs/
